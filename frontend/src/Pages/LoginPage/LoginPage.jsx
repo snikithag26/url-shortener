@@ -22,33 +22,31 @@ export default function LoginPage() {
   const googleResponse = async (res) => {
     try {
       const token = res.credential;
-
-      if (!token) {
-        showNotification({
-          title: "Error",
-          message: "Invalid Response From Google",
-          color: "red",
-        });
-        return;
-      }
-
       const response = await service.post(GOOGLE_AUTH_LOGIN, { token });
       const data = response.data;
 
+      // Decode JWT to extract id
+      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+      console.log("Token payload:", tokenPayload);
+
       dispatch(
         setUser({
+          id: tokenPayload._id || tokenPayload.id || tokenPayload.userId, // ← handles all common cases
           name: data.name,
           avatar: data.avatar,
           token: data.token,
           email: data.email,
+          createdAt: new Date().toLocaleString(),
           isLoggedIn: true,
         })
       );
+
       showNotification({
         title: "Success",
         message: "Welcome! Login Successfully.",
         color: "green",
       });
+
       navigate("/");
     } catch (error) {
       showNotification({
