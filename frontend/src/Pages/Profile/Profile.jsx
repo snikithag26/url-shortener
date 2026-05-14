@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Center,
@@ -6,12 +7,29 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-
-import { useSelector } from "react-redux";
+import Service from "../../utils/http";
 
 export default function Profile() {
+  const [user, setUser] = useState({});
 
-  const user = useSelector((state) => state.user);
+  useEffect(() => {
+
+    const fetchUser = async () => {
+      try {
+        const service = new Service();
+
+        const res = await service.get("user/me");
+
+        setUser(res);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchUser();
+
+  }, []);
 
   return (
     <Center mt={50}>
@@ -33,12 +51,14 @@ export default function Profile() {
 
         <Group gap={5}>
           <Text fw={700}>User ID:</Text>
-          <Text>{user.id}</Text>
+          <Text>{user._id}</Text>
         </Group>
 
         <Group gap={5}>
           <Text fw={700}>Account Created:</Text>
-          <Text>{user.createdAt}</Text>
+          <Text>
+            {new Date(user.createdAt).toLocaleString("en-GB")}
+          </Text>
         </Group>
 
       </Stack>

@@ -14,7 +14,7 @@ const queryClient = new QueryClient();
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+   <StrictMode>
     <GoogleOAuthProvider clientId={googleClientId}>
       <MantineProvider>
         <Notifications zIndex={9999} />
@@ -27,5 +27,5 @@ createRoot(document.getElementById('root')).render(
         </QueryClientProvider>
       </MantineProvider>
     </GoogleOAuthProvider>
-  </StrictMode>
+   </StrictMode>
 );
